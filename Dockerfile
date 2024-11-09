@@ -1,18 +1,18 @@
 FROM alpine
 
-# 
-RUN apk add --no-cache tzdata at && \
+# install tzdata and create necessary directories
+RUN apk add --no-cache tzdata && \
     mkdir -p /app/source /app/target /app/log
 
-# 
+# set the working directory
 WORKDIR /app
 
-# 
+# define mount points for source, target, and log directories
 VOLUME [ "/app/source","/app/target","/app/log" ]
 
-# 
-COPY app.sh .
-RUN chmod +x app.sh
+# copy all shell scripts to the working directory and make them executable
+COPY *.sh .
+RUN chmod +x *.sh
 
-# 
-ENTRYPOINT [ "./app.sh" ]
+# set the entrypoint to execute the main entrypoint script
+ENTRYPOINT [ "./entrypoint.sh" ]
