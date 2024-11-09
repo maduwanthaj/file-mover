@@ -1,0 +1,13 @@
+services:
+  file-mover:
+    image: file-mover
+    container_name: file-mover
+    network_mode: none
+    volumes:
+      - /path/to/source:/app/source
+      - /path/to/target:/app/target
+      - /path/to/log:/app/log
+    environment:
+      - TZ=Asia/Colombo
+    command: ["--schedule", "00 21 * * *"]
+    restart: always
