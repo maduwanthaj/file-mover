@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# source entrypoint functions and variables
-source /app/entrypoint.sh
+# source the common library
+source /app/lib.sh
 
 # log initial status of file check
 log_info "checking for new files."
@@ -21,3 +21,6 @@ if [ "${file_num}" -gt 0 ]; then
 else
     log_info "no files were found."
 fi
+
+# if the sentinel file exists, remove the sentinel and kill the cron process 
+[ -f "$SENTINEL" ] && sed -i '/app.sh/d' /etc/crontabs/root && pkill crond >> /dev/null
