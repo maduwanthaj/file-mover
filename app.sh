@@ -1,24 +1,7 @@
 #!/bin/sh
 
-# define source and target directories for file operations
-SOURCE="/app/source"
-TARGET="/app/target"
-
-# define the log file location
-LOG_FILE="/app/log/file-mover.log"
-
-# function to log informational messages
-log_info() {
-    local msg="${1}"
-    echo "time=$(date "+%Y-%m-%d %T") level=info msg=${msg}" | tee -a "${LOG_FILE}"
-}
-
-# function to log error messages and exit
-log_error() {
-    local msg="${1}"
-    echo "time=$(date "+%Y-%m-%d %T") level=error msg=${msg}" | tee -a "${LOG_FILE}"
-    exit 1
-}
+# source entrypoint functions and variables
+source /app/entrypoint.sh
 
 # log initial status of file check
 log_info "checking for new files."
