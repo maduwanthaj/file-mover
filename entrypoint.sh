@@ -16,18 +16,14 @@ usage() {
 
 # function to schedule a one-time task using cron
 once() {
-    local time="${1}"
-    echo "${time} touch ${SENTINEL} && /app/app.sh" > /etc/crontabs/root
+    echo "${1} touch ${SENTINEL} && /app/app.sh" > /etc/crontabs/root
     log_info "one-time file-moving task has been created."
-    crond -f
 }
 
 # function to schedule a recurring task using cron
 schedule() {
-    local time="${1}"
-    echo "${time} /app/app.sh" > /etc/crontabs/root
+    echo "${1} /app/app.sh" > /etc/crontabs/root
     log_info "scheduled file-moving task has been created."
-    crond -f
 }
 
 # function to execute the main application script directly
@@ -38,9 +34,13 @@ app() {
 # parse command-line arguments and execute appropriate functions
 case "${1}" in
     "--run-once")
-        [ -n "${2}" ] && once "${2}" || app ;;
+        [ -n "${2}" ] && once "${2}" || app
+        # start cron in the foreground
+        crond -f 2> /dev/null ;;
     "--schedule")
-        [ -n "${2}" ] && schedule "${2}" || usage ;;
+        [ -n "${2}" ] && schedule "${2}" || usage
+        # start cron in the foreground
+        crond -f 2> /dev/null ;;
     "--help")
         usage ;;
     "--version")
