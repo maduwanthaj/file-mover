@@ -33,18 +33,30 @@ app() {
 
 # parse command-line arguments and execute appropriate functions
 case "${1}" in
-    "--run-once")
-        [ -n "${2}" ] && once "${2}" || app
-        # start cron in the foreground
-        crond -f 2> /dev/null ;;
-    "--schedule")
-        [ -n "${2}" ] && schedule "${2}" || usage
-        # start cron in the foreground
-        crond -f 2> /dev/null ;;
     "--help")
-        usage ;;
+        usage
+        exit 0 ;;
     "--version")
-        echo "Version: ${VERSION}" ;;
+        echo "Version: ${VERSION}"
+        exit 0 ;;
+    "--run-once")
+        if [ -n "${2}" ]; then
+            once "${2}"
+        else
+            app
+            exit 0
+        fi ;;
+    "--schedule")
+        if [ -n "${2}" ]; then
+            schedule "${2}"
+        else
+            usage
+            exit 0
+        fi ;;
     *)
-        usage ;;
+        usage
+        exit 0 ;;
 esac
+
+# start cron in the foreground
+crond -f 2> /dev/null
