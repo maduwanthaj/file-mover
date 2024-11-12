@@ -23,4 +23,4 @@ else
 fi
 
 # if the sentinel file exists, remove the sentinel and kill the cron process 
-[ -f "$SENTINEL" ] && rm -f "${SENTINEL}" && pkill crond > /dev/null 2>&1
+[ -f "$SENTINEL" ] && rm -rf "${SENTINEL}" && pkill crond > /dev/null 2>&1
