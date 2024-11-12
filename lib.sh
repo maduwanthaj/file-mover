@@ -12,7 +12,7 @@ C_RESET="\033[0m"
 LOG_FILE="/app/log/file-mover.log"
 SOURCE="/app/source"
 TARGET="/app/target"
-SENTINEL="/tmp/cron_task_in_progress"
+SENTINEL="/tmp/one_time_task"
 
 # function to log informational messages
 log_info() {
