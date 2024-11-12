@@ -14,16 +14,10 @@ usage() {
     printf "\n"
 }
 
-# function to schedule a one-time task using cron
-once() {
-    echo "${1} touch ${SENTINEL} && /app/app.sh" > /etc/crontabs/root
-    log_info "one-time file-moving task has been created."
-}
-
-# function to schedule a recurring task using cron
-schedule() {
+# function to add cron job based on input type
+set_cron_job() {
     echo "${1} /app/app.sh" > /etc/crontabs/root
-    log_info "scheduled file-moving task has been created."
+    log_info "${2} file-moving task has been created."
 }
 
 # function to execute the main application script directly
@@ -41,14 +35,15 @@ case "${1}" in
         exit 0 ;;
     "--run-once")
         if [ -n "${2}" ]; then
-            once "${2}"
+            touch "${SENTINEL}"
+            set_cron_job "${2}" "one-time"
         else
             app
             exit 0
         fi ;;
     "--schedule")
         if [ -n "${2}" ]; then
-            schedule "${2}"
+            set_cron_job "${2}" "scheduled"
         else
             usage
             exit 0
