@@ -3,6 +3,9 @@
 # source the common library
 source /app/lib.sh
 
+# source the cron validation script
+source /app/cron_expression_validation.sh
+
 # function to display usage instructions
 show_usage() {
     printf "${C_BOLD}Usage:${C_RESET}  entrypoint.sh [OPTIONS] [ARG...]\n\n"
@@ -61,8 +64,10 @@ case "${1}" in
     "--version")
         show_version ;;
     "--run-once")
+        cron_expression_validation "${2}"
         create_one_time_task "${2}" ;;
     "--schedule")
+        cron_expression_validation "${2}"
         create_schedule_task "${2}" ;;
     *)
         show_usage ;;
