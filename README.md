@@ -6,7 +6,7 @@ A lightweight Docker container for automated file moving and logging, using `cro
 
 - Customizable schedule for recurring file-moving tasks.
 - One-time or immediate file-moving task execution using `cron`.
-- Logging of each file transfer, with error messages logged separately.
+- Detailed Logging of each file transfer, with error messages for any issues.
 - Lightweight Alpine-based Docker image with support for setting time zones.
 
 ## Getting Started
@@ -52,7 +52,7 @@ The container accepts the following command-line options:
 
 #### Run Once at a Specific Time
 
-This command schedules a one-time execution of the file-moving operation at a specified time using `cron` format (e.g., `00 21 1 12 *` to run at 9:00 PM on the 1st of December):
+This command schedules a one-time execution of the file-moving operation at a specified time using `cron` format (e.g., `00 21 1 12 *` to run at 9:00 PM on December 1st):
 
 ```bash
 docker run --rm -d --name file-mover \
@@ -93,9 +93,11 @@ The container defines the following directories for file operations:
 
 ## File Structure
 
-- **Dockerfile**: Sets up the Alpine environment, installs `tzdata`, and configures the working directories and entrypoint script.
-- **entrypoint.sh**: Main entry script that handles command-line options and schedules tasks with `cron`.
-- **app.sh**: The core script that checks for new files in the source directory, moves them to the target directory, and logs each operation.
+- **Dockerfile**: Configures the Alpine environment, installs `tzdata`, and sets up the working directories and entrypoint script.
+- **lib.sh**: Shared library providing utility functions for logging and directory setup.
+- **entrypoint.sh**: Main entry script for parsing command-line options, validating cron expressions, and scheduling tasks.
+- **cron_expression_validation.sh**: Handles cron expression validation for recurring and one-time tasks.
+- **app.sh**: Core script that checks for new files in the source directory, moves them to the target directory, and logs each operation.
 
 ## Logging
 
