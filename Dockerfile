@@ -11,7 +11,7 @@ WORKDIR /app
 VOLUME [ "/app/source","/app/target","/app/log" ]
 
 # copy all shell scripts to the working directory and make them executable
-COPY *.sh .
+COPY scripts/*.sh .
 RUN chmod +x *.sh
 
 # set the entrypoint to execute the main entrypoint script
