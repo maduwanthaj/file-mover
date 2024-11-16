@@ -7,7 +7,7 @@ source /app/lib.sh
 source /app/cron_expression_validation.sh
 
 # function to display usage instructions
-show_usage() {
+show_help() {
     printf "${C_BOLD}Usage:${C_RESET}  entrypoint.sh [OPTIONS] [ARG...]\n\n"
     printf "${C_BOLD}Options:${C_RESET}\n"
     printf "${C_BLUE}%-20s${C_RESET} %-50s\n" "--schedule [TIME]" "schedule the container to run repeatedly at a specified time."
@@ -36,7 +36,7 @@ execute_app() {
 }
 
 # function to create a one-time task or schedule it at a specified time
-create_one_time_task() {
+create_run_once_task() {
     if [ -n "${1}" ]; then
         touch "${SENTINEL}"
         set_cron_job "${1}" "one-time"
@@ -59,18 +59,17 @@ create_schedule_task() {
 
 # parse command-line arguments and execute appropriate functions
 case "${1}" in
-    "--help")
-        show_usage ;;
-    "--version")
-        show_version ;;
-    "--run-once")
+    "--help"|"--version")
+        func_name=$(echo "${1}" | sed 's/^--/show_/')
+        "${func_name}" ;;
+    "--run-once"|"--schedule")
+        log_info "file-mover up and running."
+        [ -z "${2}" ] && log_error "cron expression is required for ${1} option." 
         cron_expression_validation "${2}"
-        create_one_time_task "${2}" ;;
-    "--schedule")
-        cron_expression_validation "${2}"
-        create_schedule_task "${2}" ;;
+        func_name=$(echo "${1}" | sed -e 's/^--/create_/' -e 's/-/_/g' -e 's/$/_task/')
+        "${func_name}" "${2}" ;;
     *)
-        show_usage ;;
+        show_help ;;
 esac
 
 # start cron in the foreground
