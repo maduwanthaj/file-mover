@@ -38,6 +38,7 @@ execute_app() {
 # function to create a one-time task or schedule it at a specified time
 create_run_once_task() {
     if [ -n "${1}" ]; then
+        cron_expression_validation "${1}"
         touch "${SENTINEL}"
         set_cron_job "${1}" "one-time"
     else
@@ -50,10 +51,10 @@ create_run_once_task() {
 # function to create a recurring task based on a specified time
 create_schedule_task() {
     if [ -n "${1}" ]; then
+        cron_expression_validation "${1}"
         set_cron_job "${1}" "scheduled"
     else
-        show_usage
-        exit 0
+        log_error "cron expression is required for --schedule option."
     fi
 }
 
@@ -64,8 +65,6 @@ case "${1}" in
         "${func_name}" ;;
     "--run-once"|"--schedule")
         log_info "file-mover up and running."
-        [ -z "${2}" ] && log_error "cron expression is required for ${1} option." 
-        cron_expression_validation "${2}"
         func_name=$(echo "${1}" | sed -e 's/^--/create_/' -e 's/-/_/g' -e 's/$/_task/')
         "${func_name}" "${2}" ;;
     *)
