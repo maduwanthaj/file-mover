@@ -16,11 +16,11 @@ SENTINEL="/tmp/one_time_task"
 
 # function to log informational messages
 log_info() {
-    echo "time=$(date "+%Y-%m-%d %T") level=info msg=$1" | tee -a "$LOG_FILE"
+    echo "time=$(date "+%Y-%m-%d %T") level=info msg=${1}" | tee -a "$LOG_FILE"
 }
 
 # function to log error messages and exit
 log_error() {
-    echo "time=$(date "+%Y-%m-%d %T") level=error msg=$1" | tee -a "$LOG_FILE"
+    echo "time=$(date "+%Y-%m-%d %T") level=error msg=${1}" >&2 | tee -a "$LOG_FILE"
     exit 1
 }
